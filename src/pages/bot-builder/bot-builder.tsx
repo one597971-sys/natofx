@@ -125,7 +125,7 @@ const BotBuilder = observer(() => {
                 </div>
             </div>
             {active_tab === 1 && <BotBuilderTourHandler is_mobile={!isDesktop} />}
-            {active_tab === 1 && <aside className='bot-builder__distribution'><DistributionPanel compact /></aside>
+            {active_tab === 1 && <aside className='bot-builder__distribution'><DistributionPanel compact /></aside>}
             {/* removed this outside from toolbar becuase it needs to loaded seperately without dependency */}
             <LoadModal />
             <SaveModal />
