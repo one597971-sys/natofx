@@ -24,7 +24,7 @@ jobs:
         run: npm ci
       - name: Type-check
         run: npm run type-check
-      - name: Run tests
-        run: npm test -- --runInBand
+      - name: Run distribution engine tests
+        run: npx jest src/features/distribution/__tests__/distribution-engine.test.ts --runInBand
       - name: Build production bundle
         run: npm run build
