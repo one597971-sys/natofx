@@ -38,7 +38,7 @@ const DistributionPanel = ({ compact = false }: DistributionPanelProps) => {
                     <p className='distribution__subheading'>Last 500 ticks · Live Deriv feed</p>
                 </div>
                 <span className={loading ? 'distribution__status distribution__status--loading' : 'distribution__status'}>
-                    {loading ? 'Loading' : error ? 'Feed issue' : 'Live'}
+                    {loading ? 'Loading' : error ? 'Feed issue' : snapshot.sampleSize > 0 ? 'Live' : 'Waiting for ticks'}
                 </span>
             </header>
 
