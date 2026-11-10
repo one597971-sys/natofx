@@ -47,7 +47,7 @@ const DistributionPanel = ({ compact = false }: DistributionPanelProps) => {
                     <span>Market</span>
                     <select value={market} onChange={event => setMarket(event.target.value)}>
                         <option value='all'>All markets</option>
-                        {markets.map(item => <option key={item} value={item}>{item.replaceAll('_', ' ')}</option>)}
+                        {markets.map(item => <option key={item} value={item}>{item.replace(/_/g, ' ')}</option>)}
                     </select>
                 </label>
                 <label>
@@ -87,7 +87,7 @@ const DistributionPanel = ({ compact = false }: DistributionPanelProps) => {
                         </div>
                         <div>
                             <span>Selected market</span>
-                            <strong>{symbolDetails?.market?.replaceAll('_', ' ') || '—'}</strong>
+                            <strong>{symbolDetails?.market?.replace(/_/g, ' ') || '—'}</strong>
                         </div>
                     </div>
 
