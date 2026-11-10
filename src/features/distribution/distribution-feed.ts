@@ -1,5 +1,6 @@
 import { api_base } from '@/external/bot-skeleton';
 import { DistributionTick } from './distribution-engine';
+import { doUntilDone } from '@/external/bot-skeleton/services/tradeEngine/utils/helpers';
 
 export type DistributionFeedState = {
     ticks: DistributionTick[];
@@ -61,7 +62,7 @@ export const subscribeDistributionFeed = (
             feed?.listeners.delete(listener);
             if (feed && feed.listeners.size === 0) {
                 feed.messageSubscription.unsubscribe();
-                if (feed.subscriptionId) api.send({ forget: feed.subscriptionId });
+                if (feed.subscriptionId) doUntilDone(() => api.send({ forget: feed.subscriptionId }), [], api_base);
                 feeds.delete(key);
             }
         };
@@ -69,7 +70,7 @@ export const subscribeDistributionFeed = (
 
     if (feed) {
         feed.messageSubscription.unsubscribe();
-        if (feed.subscriptionId) feed.api.send({ forget: feed.subscriptionId });
+        if (feed.subscriptionId) doUntilDone(() => feed.api.send({ forget: feed.subscriptionId }), [], api_base);
         feeds.delete(key);
     }
 
@@ -95,19 +96,19 @@ export const subscribeDistributionFeed = (
     feeds.set(key, feed);
     publish(feed);
 
-    const historyRequest = api.send({
+    const historyRequest = doUntilDone(() => api.send({
         ticks_history: symbol,
         count: sampleSize,
         end: 'latest',
         style: 'ticks',
         subscribe: 1,
-    }) as unknown as Promise<any>;
+    }), [], api_base);
 
     historyRequest.then(response => {
         const current = feeds.get(key);
         if (!current || current.api !== api) {
             const id = response?.subscription?.id;
-            if (id) api.send({ forget: id });
+            if (id) doUntilDone(() => api.send({ forget: id }), [], api_base);
             return;
         }
         if (response?.error) {
