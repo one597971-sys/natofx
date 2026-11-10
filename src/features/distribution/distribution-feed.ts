@@ -141,7 +141,7 @@ export const subscribeDistributionFeed = (
         current.listeners.delete(listener);
         if (current.listeners.size === 0) {
             current.messageSubscription.unsubscribe();
-            if (current.subscriptionId) current.api.send({ forget: current.subscriptionId });
+            if (current.subscriptionId) doUntilDone(() => current.api.send({ forget: current.subscriptionId }), [], api_base);
             feeds.delete(key);
         }
     };
