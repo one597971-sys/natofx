@@ -48,13 +48,14 @@ export const useLiveDistribution = (symbol: string, barrier: number, sampleSize 
             }));
         });
 
-        api.send({
+        const historyRequest = api.send({
             ticks_history: symbol,
             count: sampleSize,
             end: 'latest',
             style: 'ticks',
             subscribe: 1,
-        }).then((response: any) => {
+        }) as unknown as Promise<any>;
+        historyRequest.then((response: any) => {
             if (!active) {
                 const id = response?.subscription?.id;
                 if (id) api.send({ forget: id });
