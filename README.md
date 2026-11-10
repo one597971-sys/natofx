@@ -30,7 +30,7 @@ cp .env.example .env
 
 ```env
 # Required: Deriv app id — drives OAuth login/sign-up and WebSocket connections.
-NEXT_PUBLIC_DERIV_APP_ID=your_app_id_here 34Q3eqkYWj0lhHLZfKiJC
+NEXT_PUBLIC_DERIV_APP_ID=34Q3eqkYWj0lhHLZfKiJC
 
 # Optional: environment + affiliate attribution.
 NEXT_PUBLIC_DERIV_ENV=production
