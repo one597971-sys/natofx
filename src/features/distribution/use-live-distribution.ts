@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { api_base } from '@/external/bot-skeleton';
+import { useApiBase } from '@/hooks/useApiBase';
 import {
     calculateDistribution,
     DEFAULT_TICK_SAMPLE,
@@ -15,6 +16,8 @@ type ActiveSymbol = {
 };
 
 export const useLiveDistribution = (symbol: string, barrier: number, sampleSize = DEFAULT_TICK_SAMPLE) => {
+    // Re-render when the shared Deriv connection/authentication state changes; api_base is a mutable service.
+    useApiBase();
     const [state, setState] = useState<DistributionFeedState>({
         ticks: [],
         loading: false,
