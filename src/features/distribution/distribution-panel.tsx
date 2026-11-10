@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLiveDistribution } from './use-live-distribution';
 import './distribution-panel.scss';
 
@@ -25,8 +25,9 @@ const DistributionPanel = ({ compact = false }: DistributionPanelProps) => {
         ? symbol
         : marketSymbols[0]?.symbol || '';
 
-    // Keep the selected market's first available symbol when the market changes.
-    if (selectedSymbol !== symbol) setSymbol(selectedSymbol);
+    useEffect(() => {
+        if (selectedSymbol !== symbol) setSymbol(selectedSymbol);
+    }, [selectedSymbol, symbol]);
 
     return (
         <section className={compact ? 'distribution distribution--compact' : 'distribution'}>
