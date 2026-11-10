@@ -26,13 +26,19 @@ const publish = (feed: Feed) => {
 };
 
 const mergeTicks = (history: DistributionTick[], live: DistributionTick[], sampleSize: number) => {
-    const byEpoch = new Map<number, DistributionTick>();
-    history.forEach((tick, index) => byEpoch.set(tick.epoch ?? index, tick));
-    live.forEach((tick, index) => byEpoch.set(tick.epoch ?? history.length + index, tick));
-    return [...byEpoch.entries()]
-        .sort((a, b) => a[0] - b[0])
-        .map(([, tick]) => tick)
-        .slice(-sampleSize);
+    const sameTick = (left: DistributionTick, right: DistributionTick) =>
+        left.quote === right.quote && left.epoch === right.epoch;
+    const maxOverlap = Math.min(history.length, live.length);
+    let overlap = 0;
+    for (let size = maxOverlap; size > 0; size -= 1) {
+        const historySuffix = history.slice(-size);
+        const livePrefix = live.slice(0, size);
+        if (historySuffix.every((tick, index) => sameTick(tick, livePrefix[index]))) {
+            overlap = size;
+            break;
+        }
+    }
+    return [...history, ...live.slice(overlap)].slice(-sampleSize);
 };
 
 export const subscribeDistributionFeed = (
