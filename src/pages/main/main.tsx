@@ -42,6 +42,7 @@ import RunPanel from '../../components/run-panel';
 import ChartModal from '../chart/chart-modal';
 import Dashboard from '../dashboard';
 import RunStrategy from '../dashboard/run-strategy';
+import DistributionPanel from '@/features/distribution/distribution-panel';
 import './main.scss';
 
 const ChartWrapper = lazy(() => import('../chart/chart-wrapper'));
@@ -78,7 +79,7 @@ const AppWrapper = observer(() => {
     const { clear } = summary_card;
     const { DASHBOARD, BOT_BUILDER } = DBOT_TABS;
     const init_render = React.useRef(true);
-    const hash = ['dashboard', 'bot_builder', 'chart', 'tutorial'];
+    const hash = ['dashboard', 'bot_builder', 'chart', 'tutorial', 'analysis'];
     const { isDesktop } = useDevice();
     const location = useLocation();
     const navigate = useNavigate();
@@ -145,6 +146,7 @@ const AppWrapper = observer(() => {
     React.useEffect(() => {
         const el_dashboard = document.getElementById('id-dbot-dashboard');
         const el_tutorial = document.getElementById('id-tutorials');
+        const el_analysis = document.getElementById('id-analysis');
 
         const observer_dashboard = new window.IntersectionObserver(
             ([entry]) => {
@@ -174,7 +176,8 @@ const AppWrapper = observer(() => {
             }
         );
         observer_dashboard.observe(el_dashboard);
-        observer_tutorial.observe(el_tutorial);
+        if (el_tutorial) observer_tutorial.observe(el_tutorial);
+        if (el_analysis) observer_tutorial.observe(el_analysis);
     });
 
     React.useEffect(() => {
@@ -451,6 +454,14 @@ const AppWrapper = observer(() => {
                                         <Tutorial handleTabChange={handleTabChange} />
                                     </Suspense>
                                 </div>
+                            </div>
+                            <div
+                                label={<Localize i18n_default_text='Analysis' />}
+                                id='id-analysis'
+                            >
+                                <Suspense fallback={<ChunkLoader message={localize('Loading distribution analytics...')} />}>
+                                    <DistributionPanel />
+                                </Suspense>
                             </div>
                         </Tabs>
                         {!isDesktop && right_tab_shadow && <span className='tabs-shadow tabs-shadow--right' />}{' '}
