@@ -13,7 +13,7 @@ import { useApiBase } from '@/hooks/useApiBase';
 import useDevMode from '@/hooks/useDevMode';
 import { useStore } from '@/hooks/useStore';
 import useThemeSwitcher from '@/hooks/useThemeSwitcher';
-import { isPreviewMode } from '@/utils/is-preview-mode';
+import { GITHUB_PAGES_BASE_PATH, isPreviewMode } from '@/utils/is-preview-mode';
 import { ThemeProvider } from '@deriv-com/quill-ui';
 import { setSmartChartsPublicPath } from '@deriv-com/smartcharts-champion';
 import { localize } from '@deriv-com/translations';
@@ -108,7 +108,9 @@ const AppContent = observer(() => {
     );
 
     React.useEffect(() => {
-        setSmartChartsPublicPath(getUrlBase('/js/smartcharts/'));
+        setSmartChartsPublicPath(
+            GITHUB_PAGES_BASE_PATH ? `${GITHUB_PAGES_BASE_PATH}/js/smartcharts/` : getUrlBase('/js/smartcharts/')
+        );
     }, []);
 
     React.useEffect(() => {
