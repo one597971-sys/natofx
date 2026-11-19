@@ -8,7 +8,7 @@ import RoutePromptDialog from '@/components/route-prompt-dialog';
 import { useAccountSwitching } from '@/hooks/useAccountSwitching';
 import { useLanguageFromURL } from '@/hooks/useLanguageFromURL';
 import { StoreProvider } from '@/hooks/useStore';
-import { isPreviewMode, PREVIEW_BASE_PATH } from '@/utils/is-preview-mode';
+import { GITHUB_PAGES_BASE_PATH, isPreviewMode, PREVIEW_BASE_PATH } from '@/utils/is-preview-mode';
 import { localize, TranslationProvider } from '@deriv-com/translations';
 import CoreStoreProvider from './CoreStoreProvider';
 import i18nInstance from './i18n';
@@ -29,7 +29,7 @@ const LanguageHandler = ({ children }: { children: React.ReactNode }) => {
 // The static preview build is served under /bot/preview (see rsbuild.config.ts
 // assetPrefix), so React Router must resolve routes under that prefix. Standalone
 // partner deploys are served at the root, so no basename there.
-const routerBasename = isPreviewMode() ? PREVIEW_BASE_PATH : undefined;
+const routerBasename = isPreviewMode() ? PREVIEW_BASE_PATH : GITHUB_PAGES_BASE_PATH || undefined;
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -83,7 +83,9 @@ function App() {
             try {
                 const authInfo = await handleOAuthCallback(window.location.href, {
                     clientId: process.env.NEXT_PUBLIC_DERIV_APP_ID || '',
-                    redirectUri: window.location.origin,
+                    redirectUri: GITHUB_PAGES_BASE_PATH
+                        ? `${window.location.origin}${GITHUB_PAGES_BASE_PATH}/`
+                        : window.location.origin,
                     scopes: 'trade',
                 });
 
