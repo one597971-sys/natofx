@@ -108,7 +108,7 @@ function App() {
             } catch (error) {
                 console.error('OAuth callback error:', error);
             } finally {
-                cleanupUrl(window.location.origin);
+                cleanupUrl(`${window.location.origin}${GITHUB_PAGES_BASE_PATH}/`);
             }
         };
 
