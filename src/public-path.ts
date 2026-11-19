@@ -1,4 +1,4 @@
-import { isPreviewMode, PREVIEW_BASE_PATH } from './utils/is-preview-mode';
+import { GITHUB_PAGES_BASE_PATH, isPreviewMode, PREVIEW_BASE_PATH } from './utils/is-preview-mode';
 
 export const getUrlBase = (path = '') => {
     const l = window.location;
@@ -82,4 +82,10 @@ export { initSurvicate, setSurvicateCalledValue };
 // runtime public path — used to build asset URLs (audio, Blockly media, favicon) — must
 // carry that prefix. Standalone partner deploys are served at the root (legacy /br_* aware
 // via getUrlBase).
-setBotPublicPath(isPreviewMode() ? `${PREVIEW_BASE_PATH}/` : getUrlBase('/'));
+setBotPublicPath(
+    isPreviewMode()
+        ? `${PREVIEW_BASE_PATH}/`
+        : GITHUB_PAGES_BASE_PATH
+          ? `${GITHUB_PAGES_BASE_PATH}/`
+          : getUrlBase('/')
+);
