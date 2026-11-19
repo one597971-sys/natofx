@@ -8,6 +8,7 @@ import { pluginSass } from '@rsbuild/plugin-sass';
 loadEnv({ mode: 'production' });
 
 const isStaticBuild = process.env.NEXT_PUBLIC_APP_BUILD === 'true';
+const isGithubPagesBuild = process.env.GITHUB_PAGES === 'true';
 
 // Resolve smartcharts from wherever the package actually lives so the asset
 // copy works both standalone and inside the monorepo (npm workspaces hoist the
@@ -45,6 +46,7 @@ export default defineConfig({
         // Marks the static preview build (served under /bot/preview); drives the
         // router basename so React Router resolves under that path prefix.
         NEXT_PUBLIC_APP_BUILD: JSON.stringify(process.env.NEXT_PUBLIC_APP_BUILD ?? ''),
+        GITHUB_PAGES: JSON.stringify(process.env.GITHUB_PAGES ?? ''),
         GD_CLIENT_ID: JSON.stringify(process.env.GD_CLIENT_ID),
         GD_APP_ID: JSON.stringify(process.env.GD_APP_ID),
         GD_API_KEY: JSON.stringify(process.env.GD_API_KEY),
@@ -65,7 +67,7 @@ export default defineConfig({
     },
   },
   output: {
-    assetPrefix: isStaticBuild ? '/bot/preview/' : '/',
+    assetPrefix: isStaticBuild ? '/bot/preview/' : isGithubPagesBuild ? '/natofx/' : '/',
     distPath: {
       root: isStaticBuild ? 'out/preview' : 'dist',
     },
