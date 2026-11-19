@@ -14,3 +14,6 @@ export const isPreviewMode = (): boolean => process.env.NEXT_PUBLIC_APP_BUILD ==
  * Router basename. Standalone partner deploys are served at the root, so they do not use it.
  */
 export const PREVIEW_BASE_PATH = '/bot/preview';
+
+/** Base path used by the GitHub Pages project deployment. Empty for root-hosted builds. */
+export const GITHUB_PAGES_BASE_PATH = process.env.GITHUB_PAGES === 'true' ? '/natofx' : '';
