@@ -9,6 +9,7 @@ import {
 import type { AuthConfig } from '@/external/deriv-core';
 import { getInitialLanguage } from '@deriv-com/translations';
 import { DerivWSAccountsService } from '@/services/derivws-accounts.service';
+import { GITHUB_PAGES_BASE_PATH } from '@/utils/is-preview-mode';
 import brandConfig from '../../../../../brand.config.json';
 
 // =============================================================================
@@ -50,7 +51,7 @@ export const isProduction = () => {
     return productionDomains.includes(hostname);
 };
 
-export const isLocal = () => /localhost(:\d+)?$/i.test(window.location.hostname);
+export const isLocal = () => /localhost(:\\d+)?$/i.test(window.location.hostname);
 
 const getDefaultServerURL = () => {
     const isProductionEnv = isProduction();
@@ -106,7 +107,11 @@ export const generateOAuthURL = async (prompt?: string): Promise<string> => {
 
         const config: AuthConfig = {
             clientId,
-            redirectUri: window.location.origin,
+            // GitHub Pages project sites require the repository path in the OAuth
+            // redirect URI. Keep this identical to the callback handler in App.tsx.
+            redirectUri: GITHUB_PAGES_BASE_PATH
+                ? `${window.location.origin}${GITHUB_PAGES_BASE_PATH}/`
+                : window.location.origin,
             scopes: 'trade',
             // Without this a Bot deployed in ES/FR/PT sends its clients to an
             // English login (#804). `getInitialLanguage()` is the same reader
