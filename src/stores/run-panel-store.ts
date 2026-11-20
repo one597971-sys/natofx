@@ -439,6 +439,8 @@ export default class RunPanelStore {
     };
 
     registerBotListeners = () => {
+        // Clear listeners left by an earlier or interrupted run before registering again.
+        this.unregisterBotListeners();
         const { summary_card, transactions } = this.root_store;
 
         observer.register('bot.running', this.onBotRunningEvent);
@@ -741,7 +743,9 @@ export default class RunPanelStore {
 
     unregisterBotListeners = () => {
         observer.unregisterAll('bot.running');
+        observer.unregisterAll('bot.sell');
         observer.unregisterAll('bot.stop');
+        observer.unregisterAll('bot.bot_ready');
         observer.unregisterAll('bot.click_stop');
         observer.unregisterAll('bot.stop_button_click');
         observer.unregisterAll('bot.trade_again');
