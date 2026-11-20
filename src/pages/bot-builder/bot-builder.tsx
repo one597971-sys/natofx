@@ -13,7 +13,6 @@ import SaveModal from '../dashboard/bot-list/save-modal';
 import BotBuilderTourHandler from '../tutorials/dbot-tours/bot-builder-tour';
 import QuickStrategy1 from './quick-strategy';
 import WorkspaceWrapper from './workspace-wrapper';
-import DistributionPanel from '@/features/distribution/distribution-panel';
 
 const BotBuilder = observer(() => {
     const { dashboard, app, run_panel, toolbar, quick_strategy, blockly_store } = useStore();
@@ -125,7 +124,6 @@ const BotBuilder = observer(() => {
                 </div>
             </div>
             {active_tab === 1 && <BotBuilderTourHandler is_mobile={!isDesktop} />}
-            {active_tab === 1 && <aside className='bot-builder__distribution'><DistributionPanel compact /></aside>}
             {/* removed this outside from toolbar becuase it needs to loaded seperately without dependency */}
             <LoadModal />
             <SaveModal />
