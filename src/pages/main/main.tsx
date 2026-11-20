@@ -42,7 +42,6 @@ import RunPanel from '../../components/run-panel';
 import ChartModal from '../chart/chart-modal';
 import Dashboard from '../dashboard';
 import RunStrategy from '../dashboard/run-strategy';
-import DistributionPanel from '@/features/distribution/distribution-panel';
 import './main.scss';
 
 const ChartWrapper = lazy(() => import('../chart/chart-wrapper'));
@@ -144,6 +143,8 @@ const AppWrapper = observer(() => {
     }, [location.search]);
 
     React.useEffect(() => {
+        if (!window.IntersectionObserver) return undefined;
+
         const el_dashboard = document.getElementById('id-dbot-dashboard');
         const el_tutorial = document.getElementById('id-tutorials');
         const el_analysis = document.getElementById('id-analysis');
@@ -158,7 +159,7 @@ const AppWrapper = observer(() => {
             },
             {
                 root: null,
-                threshold: 0.5, // set offset 0.1 means trigger if atleast 10% of element in viewport
+                threshold: 0.5,
             }
         );
 
@@ -172,13 +173,19 @@ const AppWrapper = observer(() => {
             },
             {
                 root: null,
-                threshold: 0.5, // set offset 0.1 means trigger if atleast 10% of element in viewport
+                threshold: 0.5,
             }
         );
-        observer_dashboard.observe(el_dashboard);
+
+        if (el_dashboard) observer_dashboard.observe(el_dashboard);
         if (el_tutorial) observer_tutorial.observe(el_tutorial);
         if (el_analysis) observer_tutorial.observe(el_analysis);
-    });
+
+        return () => {
+            observer_dashboard.disconnect();
+            observer_tutorial.disconnect();
+        };
+    }, []);
 
     React.useEffect(() => {
         if (connectionStatus !== CONNECTION_STATUS.OPENED) {
@@ -459,9 +466,9 @@ const AppWrapper = observer(() => {
                                 label={<Localize i18n_default_text='Analysis' />}
                                 id='id-analysis'
                             >
-                                <Suspense fallback={<ChunkLoader message={localize('Loading distribution analytics...')} />}>
-                                    <DistributionPanel />
-                                </Suspense>
+                                <div className='main__analysis-unavailable'>
+                                    <Localize i18n_default_text='Analysis is temporarily unavailable while we investigate a runtime issue.' />
+                                </div>
                             </div>
                         </Tabs>
                         {!isDesktop && right_tab_shadow && <span className='tabs-shadow tabs-shadow--right' />}{' '}
