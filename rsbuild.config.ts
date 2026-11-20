@@ -114,6 +114,10 @@ export default defineConfig({
         exclude: /node_modules/,
         use: 'raw-loader',
       });
+      // Explicitly set Rspack's runtime public path as well as Rsbuild's assetPrefix.
+      // Lazy-loaded chunks use this runtime value; GitHub Pages must retain /natofx/.
+      config.output = config.output || {};
+      config.output.publicPath = isStaticBuild ? '/bot/preview/' : isGithubPagesBuild ? '/natofx/' : '/';
       return config;
     },
   },
