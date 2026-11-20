@@ -9,7 +9,13 @@ class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch = (error, info) => {
-        if (window.TrackJS) window.TrackJS.console.log(this.props.root_store);
+        // Preserve the recovery UI, but expose the original exception and React component stack
+        // so runtime failures can be diagnosed from the browser console.
+        console.error('[NATOFX] React ErrorBoundary caught an error:', error);
+        if (info?.componentStack) {
+            console.error('[NATOFX] React component stack:', info.componentStack);
+        }
+        if (window.TrackJS) window.TrackJS.console.log({ error, info, root_store: this.props.root_store });
 
         this.setState({
             hasError: true,
