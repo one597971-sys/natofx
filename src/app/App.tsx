@@ -83,9 +83,8 @@ function App() {
             try {
                 const authInfo = await handleOAuthCallback(window.location.href, {
                     clientId: process.env.NEXT_PUBLIC_DERIV_APP_ID || '',
-                    redirectUri: GITHUB_PAGES_BASE_PATH
-                        ? `${window.location.origin}${GITHUB_PAGES_BASE_PATH}/`
-                        : window.location.origin,
+                    // Must match the root URL registered in the Deriv application.
+                    redirectUri: window.location.origin,
                     scopes: 'trade',
                 });
 
