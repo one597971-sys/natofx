@@ -107,11 +107,9 @@ export const generateOAuthURL = async (prompt?: string): Promise<string> => {
 
         const config: AuthConfig = {
             clientId,
-            // GitHub Pages project sites require the repository path in the OAuth
-            // redirect URI. Keep this identical to the callback handler in App.tsx.
-            redirectUri: GITHUB_PAGES_BASE_PATH
-                ? `${window.location.origin}${GITHUB_PAGES_BASE_PATH}/`
-                : window.location.origin,
+            // Deriv only accepts the GitHub Pages account root as the registered
+            // OAuth redirect. The root-site bridge forwards the callback to /natofx/.
+            redirectUri: window.location.origin,
             scopes: 'trade',
             // Without this a Bot deployed in ES/FR/PT sends its clients to an
             // English login (#804). `getInitialLanguage()` is the same reader
